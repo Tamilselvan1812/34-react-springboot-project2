@@ -10,9 +10,7 @@ public class Hotel {
 	        
 	    }
  
-         public Hotel() {}                           // default constructor required for JSON -> Object mapping
-
-        public String getName() 
+       public String getName() 
         {
 			return name;
 		}
