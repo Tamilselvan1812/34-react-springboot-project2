@@ -9,42 +9,36 @@ function AddToMenu() {
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [isEdit, setIsEdit] = useState(false);
-  const [originalName, setOriginalName] = useState("");
+  const [id, setId] = useState(null);
 
-  useEffect(() => {
-    if (location.state) {
-      setName(location.state.name);
-      setValue(location.state.value);
-      setOriginalName(location.state.name);
-      setIsEdit(true);
-    }
-  }, [location.state]);
+
+
+useEffect(() => {
+  if (location.state && location.state.item) {
+    const item = location.state.item;
+    setName(item.name);
+    setValue(item.value);
+    setIsEdit(true);
+    setId(item.id);                       // save id for PUT
+  }
+}, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+     const data = { name, value: parseInt(value) };
+
     if (isEdit) {
-      axios.put(`http://localhost:8081/menu/${originalName}`, {
-        name: name,
-        value: parseInt(value)
-      })
-      .then(() => {
-       
-        navigate("/");
-      })
-      .catch((err) => console.error(err));
-    } else {
-      axios.post("http://localhost:8081/menu", {
-        name: name,
-        value: parseInt(value)
-      })
-      .then(() => {
-       
-        navigate("/");
-      })
-      .catch((err) => console.error(err));
-    }
-  };
+    axios.put(`http://localhost:8081/menu/${id}`, data)
+      .then(() => navigate("/"))
+      .catch(err => console.error(err));
+  } else {
+    axios.post("http://localhost:8081/menu", data)
+      .then(() => navigate("/"))
+      .catch(err => console.error(err));
+  }
+};
+  
 
   return (
     <div className="container">

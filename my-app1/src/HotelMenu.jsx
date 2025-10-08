@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function HotelMenu() {
-  const [menu, setMenu] = useState({});
+  const [menu, setMenu] = useState([]);
   const navigate = useNavigate();
 
   const fetchMenu = () => {
@@ -16,14 +16,14 @@ function HotelMenu() {
     fetchMenu();
   }, []);
 
-  const handleDelete = (name) => {
-    axios.delete(`http://localhost:8081/menu/${name}`)
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:8081/menu/${id}`)
       .then(() => fetchMenu())
       .catch((err) => console.error(err));
   };
 
-  const handleUpdate = (name) => {
-    navigate("/add", { state: { name, value: menu[name] } });
+  const handleUpdate = (item) => {
+   navigate("/add", { state: { item } });
   };
 
   return (
@@ -38,13 +38,13 @@ function HotelMenu() {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(menu).map(([name, value]) => (
-            <tr key={name}>
-              <td>{name}</td>
-              <td>{value}</td>
+          {menu.map(item => (
+            <tr key={item.id}>
+              <td>{item.name}</td>
+              <td>{item.value}</td>
               <td>
-                <button onClick={() => handleUpdate(name)}>Edit</button>
-                <button onClick={() => handleDelete(name)}>Delete</button>
+                <button onClick={() => handleUpdate(item)}>Edit</button>
+                <button onClick={() => handleDelete(item.id)}>Delete</button>
               </td>
             </tr>
           ))}
